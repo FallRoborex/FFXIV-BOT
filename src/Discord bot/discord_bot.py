@@ -1,7 +1,7 @@
 import os
 from discord import Intents, Client, Message
 from dotenv import load_dotenv
-from responce import get_responce
+from response import get_response
 
 # Load the Token 
 load_dotenv()
@@ -10,7 +10,7 @@ TOKEN = str(os.getenv("DISCORD_TOKEN"))
 
 # Bot Setup
 intents = Intents.default()
-Intents.message_content = True
+intents.message_content = True
 client = Client(intents=intents)
 
 # Message Functionality
@@ -24,8 +24,8 @@ async def send_message(message: Message, user_message: str) -> None:
         user_message = user_message[1:]
     
     try:
-        response = str(get_responce(user_message))
-        await message.author.send(response) if is_private else message.channel.send(response)
+        response = str(get_response(user_message))
+        await message.author.send(response) if is_private else await message.channel.send(response)
     except Exception as e:
         print(e)
         
@@ -44,6 +44,7 @@ async def on_message(message: Message) -> None:
     channel = str(message.channel)
     
     print(f"[{channel}] {username}: \"{user_message}\"")
+    await send_message(message, user_message)
     
     
 
