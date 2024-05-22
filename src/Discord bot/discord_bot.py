@@ -41,12 +41,10 @@ async def on_message(message: Message) -> None:
     if message.author == client.user:
         return
 
-    username = str(message.author)
-    user_message = str(message.content)
-    channel = str(message.channel)
-
-    print(f"[{channel}] {username}: \"{user_message}\"")
-    await send_message(message, user_message)
+    if message.content.startswith("%%") or message.content.startswith("?"):
+        user_message = str(message.content)
+        print(f"[{message.channel}] {message.author}: \"{user_message}\"")
+        await send_message(message, user_message)
 
 
 def main() -> None:
