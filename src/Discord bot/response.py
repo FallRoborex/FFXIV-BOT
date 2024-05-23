@@ -1,6 +1,7 @@
 from random import choice, randint
 
 
+
 def get_response(user_input: str) -> str:
     lowered = str(user_input.lower())
 
@@ -13,4 +14,4 @@ def get_response(user_input: str) -> str:
     elif "how old is Diogo":
         return "Older then the milky way"
     else:
-        return choice(["I don't understand what the hell you are talking about."])
+        return choice(["I don't understand what the hell you are talking about."

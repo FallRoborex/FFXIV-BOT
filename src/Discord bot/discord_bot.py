@@ -31,18 +31,20 @@ async def send_message(message: Message, user_message: str) -> None:
         print(e)
 
 
+# Function that would start the bot
 @client.event
 async def on_ready() -> None:
     print(f"{client.user} is now running!")
 
 
+# Displaying the message to discord
 @client.event
 async def on_message(message: Message) -> None:
     if message.author == client.user:
         return
 
     if message.content.startswith("%%") or message.content.startswith("?"):
-        user_message = str(message.content)
+        user_message = str(message.content).replace("%%", "")
         print(f"[{message.channel}] {message.author}: \"{user_message}\"")
         await send_message(message, user_message)
 
