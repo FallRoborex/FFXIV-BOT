@@ -1,29 +1,18 @@
 import requests
 
 
-def fetch_minions():
-    url = "https://ffxivcollect.com/api/minions"
+def fetch_data(endpoint: str):
+    base_url = "https://ffxivcollect.com/api/"
+    url = f"{base_url}{endpoint}"
     response = requests.get(url)
     if response.status_code == 200:
-        data = response.json()
-        return data
+        return response.json()
     else:
-        return "Error fetching mounts data"
-
-
-
-def fetch_mount():
-    url = "https://ffxivcollect.com/api/mounts"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        return data
-    else:
-        return "Error fetching mounts data"
+        return f"Error fetching {endpoint}"
 
 
 def search_for_minions(name):
-    minions = fetch_minions()
+    minions = fetch_data("minions")
 
     if minions and isinstance(minions, dict):
         minions_list = minions.get("results", [])
@@ -39,10 +28,8 @@ def search_for_minions(name):
     return "Minion not found"
 
 
-
-
 def search_for_mount(name) -> str:
-    mounts = fetch_mount()
+    mounts = fetch_data("mounts")
 
     if mounts and isinstance(mounts, dict):
         mounts_list = mounts.get('results', [])
