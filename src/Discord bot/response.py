@@ -12,15 +12,22 @@ def fetch_mount():
         return "Error fetching mounts data"
 
 
-def search_for_mount(name):
+def search_for_mount(name) -> str:
     mounts = fetch_mount()
 
     if mounts and isinstance(mounts, dict):
-
         mounts_list = mounts.get('results', [])
         for mount in mounts_list:
+            # Checks if the mount is in the API Database
             if name.lower() in mount['name'].lower():
-                return f"Name: {mount['name']}\nID: {mount['id']}\nSource: {mount['sources']}"
+                # Allow to Split the sources so that I can display it better
+                for source in mount["sources"]:
+                    # Return the str
+                    return (f"Name: {mount['name']}\n"
+                            f"ID: {mount['id']}\nSeats: {mount["seats"]}\n"
+                            f"Type: {source["type"]}\nText: {source["text"]}\nRelated Type: {source["related_type"]}\n" 
+                            f"{mount["image"]}")
+
     return "Mount not found"
 
 
