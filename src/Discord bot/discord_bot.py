@@ -1,6 +1,5 @@
 import os
-
-from discord import Intents
+from discord import Intents, Embed
 from discord.ext import commands
 from dotenv import load_dotenv
 import response
@@ -24,12 +23,24 @@ async def on_ready() -> None:
 
 @bot.hybrid_command()
 async def mount(ctx, name: str):
-    await ctx.send(response.search_for_mount(name))
+    result, image_url = response.search_for_mount(name)
+
+    embed = Embed(title="Mount Search Results", description=f"Result for {name}", colour=0x3100FA)
+    embed.add_field(name="Result", value=result, inline=False)
+    embed.set_image(url=image_url)
+
+    await ctx.send(embed=embed)
 
 
 @bot.hybrid_command()
 async def minion(ctx, name: str):
-    await ctx.send(response.search_for_minions(name))
+    result, image_url = response.search_for_minions(name)
+
+    embed = Embed(title="Minion Search Results", description=f"Result for {name}", colour=0x3100FA)
+    embed.add_field(name="Result", value=result, inline=False)
+    embed.set_image(url=image_url)
+
+    await ctx.send(embed=embed)
 
 
 def main() -> None:

@@ -1,3 +1,5 @@
+from typing import Tuple, Any
+
 import requests
 
 
@@ -20,29 +22,40 @@ def search_for_minions(name):
         for minion in minions_list:
             if name.lower() in minion["name"].lower():
                 for source in minion["sources"]:
-                    return (f"Name: {minion["name"]}\nID: {minion["id"]}\nTradeable {minion["tradeable"]}\n"
-                            f"Behavior: {minion["behavior"]["name"]}\nType: {source["type"]}\nText: {source["text"]}\nOwned: {minion["owned"]}\n"
-                            f"Race: {minion["race"]["name"]}\n"
-                            f"{minion["image"]}")
+                    image_url = minion["image"]
+                    description = (f"Name: {minion["name"]}\n"
+                                   f"ID: {minion["id"]}\n"
+                                   f"Tradeable {minion["tradeable"]}\n"
+                                   f"Behavior: {minion["behavior"]["name"]}\n"
+                                   f"Type: {source["type"]}\n"
+                                   f"Text: {source["text"]}\n"
+                                   f"Owned: {minion["owned"]}\n"
+                                   f"Race: {minion["race"]["name"]}\n")
+                    return description, image_url
 
     return "Minion not found"
 
 
-def search_for_mount(name) -> str:
+def search_for_mount(name):
     mounts = fetch_data("mounts")
 
     if mounts and isinstance(mounts, dict):
         mounts_list = mounts.get('results', [])
-        for mount in mounts_list:
 
+        for mount in mounts_list:
             # Checks if the mount is in the API Database
             if name.lower() in mount['name'].lower():
-                # Allow to Split the sources so that I can display it better
+                # Allow you to split the sources so that I can display it better
                 for source in mount["sources"]:
-                    # Return the str
-                    return (f"Name: {mount['name']}\n"
-                            f"ID: {mount['id']}\nSeats: {mount["seats"]}\n"
-                            f"Type: {source["type"]}\nText: {source["text"]}\nRelated Type: {source["related_type"]}\nOwned: {mount["owned"]}\n"
-                            f"{mount["image"]}")
+                    image_url = mount["image"]
+                    # Return the str and image URL
+                    description = (f"Name: {mount['name']}\n"
+                                   f"ID: {mount['id']}\n"
+                                   f"Seats: {mount['seats']}\n"
+                                   f"Type: {source['type']}\n"
+                                   f"Text: {source['text']}\n"
+                                   f"Related Type: {source['related_type']}\n"
+                                   f"Owned: {mount['owned']}\n")
+                    return description, image_url
 
     return "Mount not found"
