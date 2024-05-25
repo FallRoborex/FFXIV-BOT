@@ -1,6 +1,5 @@
 import os
 
-import discord
 from discord import Intents
 from discord.ext import commands
 from dotenv import load_dotenv
