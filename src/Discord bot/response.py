@@ -42,22 +42,7 @@ def search_for_mount(name) -> str:
                     # Return the str
                     return (f"Name: {mount['name']}\n"
                             f"ID: {mount['id']}\nSeats: {mount["seats"]}\n"
-                            f"Type: {source["type"]}\nText: {source["text"]}\nRelated Type: {source["related_type"]}\n"
+                            f"Type: {source["type"]}\nText: {source["text"]}\nRelated Type: {source["related_type"]}\nOwned: {mount["owned"]}\n"
                             f"{mount["image"]}")
 
     return "Mount not found"
-
-
-def get_response(user_input: str) -> str:
-    lowered = str(user_input.lower()).split()
-    command = lowered.pop(0)
-    item = " ".join(lowered)
-
-    if "mount" in command:
-        return search_for_mount(item)
-
-    elif "minion" in command:
-        return search_for_minions(item)
-
-    else:
-        return "I don't understand what the hell you are talking about."

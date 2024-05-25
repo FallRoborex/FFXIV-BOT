@@ -1,56 +1,40 @@
 import os
-from discord import Intents, Client, Message
+
+import discord
+from discord import Intents
+from discord.ext import commands
 from dotenv import load_dotenv
-from response import get_response
+import response
 
 # Load the Token 
 load_dotenv()
 TOKEN = str(os.getenv("DISCORD_TOKEN"))
 
-
 # Bot Setup
 intents = Intents.default()
 intents.message_content = True
-client = Client(intents=intents)
-
-
-# Message Functionality
-async def send_message(message: Message, user_message: str) -> None:
-    if not user_message:
-        print("(Message was empty)")
-        return
-
-    is_private = user_message[0] == "?"
-    if is_private:
-        user_message = user_message[1:]
-
-    try:
-        response = str(get_response(user_message))
-        await message.author.send(response) if is_private else await message.channel.send(response)
-    except Exception as e:
-        print(e)
+bot = commands.Bot(command_prefix="%%", intents=intents)
 
 
 # Function that would start the bot
-@client.event
+@bot.event
 async def on_ready() -> None:
-    print(f"{client.user} is now running!")
+    await bot.tree.sync()
+    print(f"{bot.user} is now running!")
 
 
-# Displaying the message to discord
-@client.event
-async def on_message(message: Message) -> None:
-    if message.author == client.user:
-        return
+@bot.hybrid_command()
+async def mount(ctx, name: str):
+    await ctx.send(response.search_for_mount(name))
 
-    if message.content.startswith("%%") or message.content.startswith("?"):
-        user_message = str(message.content).replace("%%", "")
-        print(f"[{message.channel}] {message.author}: \"{user_message}\"")
-        await send_message(message, user_message)
+
+@bot.hybrid_command()
+async def minion(ctx, name: str):
+    await ctx.send(response.search_for_minions(name))
 
 
 def main() -> None:
-    client.run(token=TOKEN)
+    bot.run(token=TOKEN)
 
 
 if __name__ == "__main__":
