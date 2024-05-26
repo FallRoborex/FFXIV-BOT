@@ -43,6 +43,17 @@ async def minion(ctx, name: str):
     await ctx.send(embed=embed)
 
 
+@bot.hybrid_command()
+async def title(ctx, name: str):
+    result, image_url = response.search_for_title(name)
+
+    embed = Embed(title="Title Search Results", description=f"Result for {name}", colour=0x3100FA)
+    embed.add_field(name="Result", value=result, inline=False)
+    embed.set_image(url=image_url)
+
+    await ctx.send(embed=embed)
+
+
 def main() -> None:
     bot.run(token=TOKEN)
 

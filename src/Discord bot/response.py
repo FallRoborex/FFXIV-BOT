@@ -1,5 +1,3 @@
-from typing import Tuple, Any
-
 import requests
 
 
@@ -55,7 +53,47 @@ def search_for_mount(name):
                                    f"Type: {source['type']}\n"
                                    f"Text: {source['text']}\n"
                                    f"Related Type: {source['related_type']}\n"
-                                   f"Owned: {mount['owned']}\n")
+                                   f"Owned: {mount['owned']}\n"
+                                   f"Tradeable: {mount["tradeable"]}\n")
                     return description, image_url
 
     return "Mount not found"
+
+
+def search_for_title(name):
+    titles = fetch_data("titles")  # Changed endpoint to "titles" for consistency
+    if titles and isinstance(titles, dict):
+        title_list = titles.get("results", [])
+        for title in title_list:
+            if name.lower() in title["name"].lower():
+                image_url = title.get("icon")
+
+                category_type = "\n".join([f"name: {category['name']}" for category in title.get("categories", [])])
+
+                achievement_info = ""
+                if "achievement" in title:
+                    achievement = title["achievement"]
+                    achievement_info = (
+                        f"Achievement Name: {achievement.get('name', 'N/A')}\n"
+                        f"Achievement Description: {achievement.get('description', 'N/A')}\n"
+                        f"Points: {achievement.get('points', 'N/A')}\n"
+                        f"Owned: {achievement.get('owned', 'N/A')}\n"
+                    )
+
+                description = (
+                    f"Name: {title['name']}\n"
+                    f"ID: {title['id']}\n"
+                    f"{category_type}\n"
+                    f"{achievement_info}\n"
+                    f"Type: {title.get('type', {}).get('name', 'N/A')}"
+                )
+                return description, image_url
+
+    return "Title not found", None
+
+def search_for_emote(name):
+    pass
+
+
+def search_for_achievement(name):
+    pass
