@@ -1,6 +1,8 @@
 import requests
 from fuzzywuzzy import fuzz, process
 
+UNIVERSAL_RATIO_CHECK = 80
+
 
 def fetch_data(endpoint: str):
     base_url = "https://ffxivcollect.com/api/"
@@ -20,9 +22,9 @@ def search_for_minions(name):
         names = [minion["name"] for minion in minions_list]
         best_match, score = process.extractOne(name.lower(), names, scorer=fuzz.partial_ratio)
 
-        if score > 80:
+        if score > UNIVERSAL_RATIO_CHECK:
             for minion in minions_list:
-                if name.lower() in minion["name"].lower():
+                if minion["name"].lower() in best_match.lower():
                     for source in minion["sources"]:
                         image_url = minion["image"]
                         description = (f"Name: {minion["name"]}\n"
@@ -47,13 +49,14 @@ def search_for_mount(name):
         names = [mount["name"].lower() for mount in mounts_list]
         best_match, score = process.extractOne(name.lower(), names, scorer=fuzz.partial_ratio)
 
-        if score > 80:
+        if score > UNIVERSAL_RATIO_CHECK:
             for mount in mounts_list:
                 # Checks if the mount is in the API Database
-                if name.lower() in mount['name'].lower():
+                if mount["name"].lower() == best_match.lower():
                     # Allow you to split the sources so that I can display it better
                     for source in mount["sources"]:
                         image_url = mount["image"]
+
                         # Return the str and image URL
                         description = (f"Name: {mount['name']}\n"
                                        f"ID: {mount['id']}\n"
@@ -63,6 +66,8 @@ def search_for_mount(name):
                                        f"Related Type: {source['related_type']}\n"
                                        f"Owned: {mount['owned']}\n"
                                        f"Tradeable: {mount["tradeable"]}\n")
+
+
                         return description, image_url
 
     return "Mount not found", None
@@ -76,9 +81,9 @@ def search_for_title(name):
         names = [title["name"] for title in title_list]
         best_match, score = process.extractOne(name.lower(), names, scorer=fuzz.partial_ratio)
 
-        if score > 80:
+        if score > UNIVERSAL_RATIO_CHECK:
             for title in title_list:
-                if name.lower() in title["name"].lower():
+                if title["name"].lower() in best_match.lower():
                     image_url = title.get("icon")
 
                     category_type = "\n".join([f"name: {category['name']}" for category in title.get("categories", [])])
