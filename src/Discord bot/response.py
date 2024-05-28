@@ -56,6 +56,7 @@ def search_for_mount(name):
                     # Allow you to split the sources so that I can display it better
                     for source in mount["sources"]:
                         image_url = mount["image"]
+
                         # Return the str and image URL
                         description = (f"Name: {mount['name']}\n"
                                        f"ID: {mount['id']}\n"
@@ -65,6 +66,8 @@ def search_for_mount(name):
                                        f"Related Type: {source['related_type']}\n"
                                        f"Owned: {mount['owned']}\n"
                                        f"Tradeable: {mount["tradeable"]}\n")
+
+
                         return description, image_url
 
     return "Mount not found", None
