@@ -67,7 +67,6 @@ def search_for_mount(name):
                                        f"Owned: {mount['owned']}\n"
                                        f"Tradeable: {mount["tradeable"]}\n")
 
-
                         return description, image_url
 
     return "Mount not found", None
@@ -88,7 +87,7 @@ def search_for_title(name):
 
                     category_type = "\n".join([f"name: {category['name']}" for category in title.get("categories", [])])
 
-                    achievement_info = ""
+                    achievement_info = "N\\A"
                     if "achievement" in title:
                         achievement = title["achievement"]
                         achievement_info = (
@@ -111,7 +110,35 @@ def search_for_title(name):
 
 
 def search_for_emote(name):
-    pass
+    emotes = fetch_data("emotes")  # Changed endpoint to "emotes" for consistency
+
+    if emotes and isinstance(emotes, dict):
+        emote_list = emotes.get("results", [])
+
+        names = [name["name"] for name in emote_list]
+        best_match, score = process.extractOne(name.lower(), names, scorer=fuzz.partial_ratio)
+
+        if score > UNIVERSAL_RATIO_CHECK:
+            for emote in emote_list:
+                if emote["name"].lower() in best_match.lower():
+                    icon_url = emote["icon"]
+                    sources = emote["sources"]
+
+                    # Get the type and description for the emote into format to be able to print it
+                    source_type = "\n".join([f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in sources])
+
+
+                    description = (f"Name: {emote['name']}\n"
+                                   f"ID: {emote['id']}\n"
+                                   f"Commands: {emote['command']}\n"
+                                   f"Tradeable: {emote['tradeable']}\n"
+                                   f"owned: {emote['owned']}\n"
+                                   f"{source_type}\n"
+                                   )
+
+                    return description, icon_url
+
+    return "Emote not found", None
 
 
 def search_for_achievement(name):
