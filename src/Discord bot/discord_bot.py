@@ -2,7 +2,7 @@ import os
 from discord import Intents, Embed
 from discord.ext import commands
 from dotenv import load_dotenv
-import response
+import searching
 
 # Load the Token 
 load_dotenv()
@@ -23,7 +23,7 @@ async def on_ready() -> None:
 
 @bot.hybrid_command()
 async def mount(ctx, name: str):
-    result, image_url = response.search_for_mount(name)
+    result, image_url = searching.search_for_mount(name)
 
     embed = Embed(title="Mount Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
@@ -34,7 +34,7 @@ async def mount(ctx, name: str):
 
 @bot.hybrid_command()
 async def minion(ctx, name: str):
-    result, image_url = response.search_for_minions(name)
+    result, image_url = searching.search_for_minions(name)
 
     embed = Embed(title="Minion Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
@@ -45,7 +45,7 @@ async def minion(ctx, name: str):
 
 @bot.hybrid_command()
 async def title(ctx, name: str):
-    result, image_url = response.search_for_title(name)
+    result, image_url = searching.search_for_title(name)
 
     embed = Embed(title="Title Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
@@ -56,7 +56,7 @@ async def title(ctx, name: str):
 
 @bot.hybrid_command()
 async def emote(ctx, name: str):
-    result, image_url = response.search_for_emote(name)
+    result, image_url = searching.search_for_emote(name)
 
     embed = Embed(title="Emotes Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
