@@ -163,3 +163,4 @@ def search_for_achievement(name):
                     )
                     return description, icon_url
     return "Achievement not found", None
+
