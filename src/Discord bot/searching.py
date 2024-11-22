@@ -127,7 +127,6 @@ def search_for_emote(name):
                     # Get the type and description for the emote into format to be able to print it
                     source_type = "\n".join([f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in sources])
 
-
                     description = (f"Name: {emote['name']}\n"
                                    f"ID: {emote['id']}\n"
                                    f"Commands: {emote['command']}\n"
@@ -142,4 +141,25 @@ def search_for_emote(name):
 
 
 def search_for_achievement(name):
-    pass
+    achievements = fetch_data("achievements")
+
+    if achievements and isinstance(achievements, dict):
+        achievement_list = achievements.get("results", [])
+
+        names = [name["name"] for name in achievement_list]
+        best_match, score = process.extractOne(name.lower(), names, scorer=fuzz.partial_ratio)
+
+        if score > UNIVERSAL_RATIO_CHECK:
+            for achievement in achievement_list:
+                if achievement["name"].lower() in best_match.lower():
+                    icon_url = achievement["icon"]
+
+                    description = (
+                        f"Name: {achievement['name']}\n"
+                        f"ID: {achievement['id']}\n"
+                        f"Description: {achievement['description']}\n"
+                        f"Points: {achievement['points']}\n"
+                        f"Owned: {achievement['owned']}\n"
+                    )
+                    return description, icon_url
+    return "Achievement not found", None
