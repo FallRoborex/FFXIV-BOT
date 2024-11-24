@@ -23,7 +23,8 @@ async def on_ready() -> None:
 
 @bot.hybrid_command()
 async def mount(ctx, name: str):
-    result, image_url = searching.search_for_mount(name)
+    search = searching.FFXIVSearch()
+    result, image_url = search.search_mount(name)
 
     embed = Embed(title="Mount Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
@@ -46,7 +47,8 @@ async def minion(ctx, name: str):
 
 @bot.hybrid_command()
 async def title(ctx, name: str):
-    result, image_url = searching.search_for_title(name)
+    search = searching.FFXIVSearch()
+    result, image_url = search.search_title(name)
 
     embed = Embed(title="Title Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
@@ -66,7 +68,6 @@ async def emote(ctx, name: str):
     await ctx.send(embed=embed)
 
 
-# /command doesn't work but %% does so idk what is happening FIX LATER
 @bot.hybrid_command()
 async def achievement(ctx, name: str):
     result, image_url = searching.search_for_achievement(name)
