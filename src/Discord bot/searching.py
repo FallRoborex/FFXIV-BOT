@@ -8,7 +8,6 @@ class FFXIVSearch:
     def __init__(self, base_url="https://ffxivcollect.com/api/"):
         self.base_url = base_url
 
-
     def get_base_url(self):
         return self.base_url
 
@@ -49,7 +48,8 @@ class FFXIVSearch:
                         In the proper place
                         """
 
-                        source = "\n".join([f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in minion["sources"]])
+                        source = "\n".join(
+                            [f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in minion["sources"]])
 
                         image_url = minion["image"]
                         description = (f"Name: {minion["name"]}\n"
@@ -73,7 +73,8 @@ class FFXIVSearch:
             if score > self.UNIVERSAL_RATIO_CHECK:
                 for mount in mounts_list:
                     if mount["name"].lower() in best_match:
-                        source = "\n".join([f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in mount["sources"]])
+                        source = "\n".join(
+                            [f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in mount["sources"]])
                         image_url = mount["image"]
 
                         description = (f"Name: {mount["name"]}\n"
@@ -127,7 +128,7 @@ class FFXIVSearch:
             return f"{name} was not found", None
 
     def search_emote(self, name):
-        emotes = self.fetch_data("emotes") # Get the data for emotes
+        emotes = self.fetch_data("emotes")  # Get the data for emotes
 
         if emotes and isinstance(emotes, dict):
             emotes_list = emotes["results"]
@@ -140,7 +141,8 @@ class FFXIVSearch:
                         icon_url = emote["icon"]
 
                         # Get the type and description for the emotes into format to be able to print it
-                        source_type = "\n".join([f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in emote["sources"]])
+                        source_type = "\n".join(
+                            [f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in emote["sources"]])
 
                         description = (f"Name: {emote['name']}\n"
                                        f"ID: {emote['id']}\n"
@@ -151,29 +153,29 @@ class FFXIVSearch:
                                        )
 
                         return description, icon_url
-        return f"{name} was not found."
-#
-#
-# def search_for_achievement(name):
-#     achievements = fetch_data("achievements")
-#
-#     if achievements and isinstance(achievements, dict):
-#         achievement_list = achievements.get("results", [])
-#
-#         names = [name["name"] for name in achievement_list]
-#         best_match, score = process.extractOne(name.lower(), names, scorer=fuzz.partial_ratio)
-#
-#         if score > UNIVERSAL_RATIO_CHECK:
-#             for achievement in achievement_list:
-#                 if achievement["name"].lower() in best_match.lower():
-#                     icon_url = achievement["icon"]
-#
-#                     description = (
-#                         f"Name: {achievement['name']}\n"
-#                         f"ID: {achievement['id']}\n"
-#                         f"Description: {achievement['description']}\n"
-#                         f"Points: {achievement['points']}\n"
-#                         f"Owned: {achievement['owned']}\n"
-#                     )
-#                     return description, icon_url
-#     return "Achievement not found", None
+            return f"{name} was not found.", None
+
+    def search_achievement(self, name):
+        achievement = self.fetch_data("achievements")
+
+        if achievement and isinstance(achievement, dict):
+            achievements_list = achievement["results"]
+
+            best_match, score = self._fuzzy_search(name, achievements_list)
+
+            if score > self.UNIVERSAL_RATIO_CHECK:
+                for achievement in achievements_list:
+                    if achievement["name"].lower() in best_match:
+                        icon_url = achievement["icon"]
+
+                        description = (
+                            f"Name: {achievement['name']}\n"
+                            f"ID: {achievement['id']}\n"
+                            f"Description: {achievement['description']}\n"
+                            f"Points: {achievement['points']}\n"
+                            f"Owned: {achievement['owned']}\n"
+                        )
+
+                        return description, icon_url
+
+            return f"{name} was not found", None

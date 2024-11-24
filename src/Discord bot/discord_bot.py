@@ -71,7 +71,8 @@ async def emote(ctx, name: str):
 
 @bot.hybrid_command()
 async def achievement(ctx, name: str):
-    result, image_url = searching.search_for_achievement(name)
+    search = searching.FFXIVSearch()
+    result, image_url = search.search_achievement(name)
 
     embed = Embed(title="Achievement Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
