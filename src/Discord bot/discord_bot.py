@@ -59,7 +59,8 @@ async def title(ctx, name: str):
 
 @bot.hybrid_command()
 async def emote(ctx, name: str):
-    result, image_url = searching.search_for_emote(name)
+    search = searching.FFXIVSearch()
+    result, image_url = search.search_emote(name)
 
     embed = Embed(title="Emotes Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)

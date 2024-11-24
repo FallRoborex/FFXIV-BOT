@@ -126,36 +126,32 @@ class FFXIVSearch:
 
             return f"{name} was not found", None
 
+    def search_emote(self, name):
+        emotes = self.fetch_data("emotes") # Get the data for emotes
 
-# def search_for_emote(name):
-#     emotes = fetch_data("emotes")  # Changed endpoint to "emotes" for consistency
-#
-#     if emotes and isinstance(emotes, dict):
-#         emote_list = emotes.get("results", [])
-#
-#         names = [name["name"] for name in emote_list]
-#         best_match, score = process.extractOne(name.lower(), names, scorer=fuzz.partial_ratio)
-#
-#         if score > UNIVERSAL_RATIO_CHECK:
-#             for emote in emote_list:
-#                 if emote["name"].lower() in best_match.lower():
-#                     icon_url = emote["icon"]
-#                     sources = emote["sources"]
-#
-#                     # Get the type and description for the emote into format to be able to print it
-#                     source_type = "\n".join([f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in sources])
-#
-#                     description = (f"Name: {emote['name']}\n"
-#                                    f"ID: {emote['id']}\n"
-#                                    f"Commands: {emote['command']}\n"
-#                                    f"Tradeable: {emote['tradeable']}\n"
-#                                    f"owned: {emote['owned']}\n"
-#                                    f"{source_type}\n"
-#                                    )
-#
-#                     return description, icon_url
-#
-#     return "Emote not found", None
+        if emotes and isinstance(emotes, dict):
+            emotes_list = emotes["results"]
+
+            best_match, score = self._fuzzy_search(name, emotes_list)
+
+            if score > self.UNIVERSAL_RATIO_CHECK:
+                for emote in emotes_list:
+                    if emote["name"].lower() in best_match:
+                        icon_url = emote["icon"]
+
+                        # Get the type and description for the emotes into format to be able to print it
+                        source_type = "\n".join([f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in emote["sources"]])
+
+                        description = (f"Name: {emote['name']}\n"
+                                       f"ID: {emote['id']}\n"
+                                       f"Commands: {emote['command']}\n"
+                                       f"Tradeable: {emote['tradeable']}\n"
+                                       f"owned: {emote['owned']}\n"
+                                       f"{source_type}\n"
+                                       )
+
+                        return description, icon_url
+        return f"{name} was not found."
 #
 #
 # def search_for_achievement(name):
