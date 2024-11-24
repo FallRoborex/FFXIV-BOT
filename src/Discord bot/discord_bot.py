@@ -34,7 +34,8 @@ async def mount(ctx, name: str):
 
 @bot.hybrid_command()
 async def minion(ctx, name: str):
-    result, image_url = searching.search_for_minions(name)
+    search = searching.FFXIVSearch()
+    result, image_url = search.search_minions(name)
 
     embed = Embed(title="Minion Search Results", description=f"Result for {name}", colour=0x3100FA)
     embed.add_field(name="Result", value=result, inline=False)
