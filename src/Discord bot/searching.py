@@ -20,11 +20,13 @@ class FFXIVSearch:
         url = f"{self.base_url}{endpoint}"
         response = requests.get(url)
 
+        # Check to see if the connection was successful to the api
         if response.status_code == 200:
             return response.json()
         else:
             return f"Error fetching {endpoint}"
 
+    # Method that would help the user if they misspelled a word and still get a result. UNIVERSAL RATIO CHECK would change the percentage
     @staticmethod
     def _fuzzy_search(name, items, key="name"):
         names = [item[key].lower() for item in items]
