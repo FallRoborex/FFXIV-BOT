@@ -1,5 +1,6 @@
 import requests
 from fuzzywuzzy import fuzz, process
+from current_market import Universalis
 
 
 class FFXIVSearch:
@@ -7,11 +8,20 @@ class FFXIVSearch:
 
     def __init__(self, base_url="https://ffxivcollect.com/api/"):
         self.base_url = base_url
+        self.item_id = 0
+        self.universalis = Universalis()
+
+    def set_item_id(self, item_id):
+        self.item_id = item_id
+        self.universalis.set_item_id(item_id)
+
+    def get_cheapest_price(self):
+        return self.universalis.get_cheapest_price()
 
     def get_base_url(self):
         return self.base_url
 
-    def set_ase_url(self, url):
+    def set_base_url(self, url):
         if not url.startswith("https"):
             raise ValueError("Base URL muse start with \"http\"")
         self.base_url = url
@@ -50,18 +60,22 @@ class FFXIVSearch:
                         In the proper place
                         """
 
-                        source = "\n".join(
-                            [f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in minion["sources"]])
+                        source = "\n".join([f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in minion["sources"]])
+                        item_id = minion["item_id"]
+
+                        if minion["tradeable"]:
+                            self.set_item_id(item_id)
 
                         image_url = minion["image"]
                         description = (f"Name: {minion["name"]}\n"
                                        f"ID: {minion["id"]}\n"
                                        f"Tradeable {minion["tradeable"]}\n"
-                                       f"Item ID: {minion["item_id"]}\n"
+                                       f"Item ID: {item_id}\n"
                                        f"Behavior: {minion["behavior"]["name"]}\n"
                                        f"{source}\n"
                                        f"Owned: {minion["owned"]}\n"
-                                       f"Race: {minion["race"]["name"]}\n")
+                                       f"Race: {minion["race"]["name"]}\n"
+                                       f"{self.universalis.get_cheapest_price()}\n")
                         return description, image_url
         return f"{name} not found", None
 
