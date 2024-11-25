@@ -89,17 +89,22 @@ class FFXIVSearch:
             if score > self.UNIVERSAL_RATIO_CHECK:
                 for mount in mounts_list:
                     if mount["name"].lower() in best_match:
-                        source = "\n".join(
-                            [f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in mount["sources"]])
+                        source = "\n".join([f"Source: {obtain["type"]}\nText: {obtain["text"]}" for obtain in mount["sources"]])
                         image_url = mount["image"]
+                        tradeable = mount["tradeable"]
+
+                        if tradeable:
+                            self.set_item_id(mount["item_id"])
+
 
                         description = (f"Name: {mount["name"]}\n"
                                        f"ID: {mount["id"]}\n"
                                        f"Seats: {mount["seats"]}\n"
-                                       f"Tradeable {mount["tradeable"]}\n"
+                                       f"Tradeable {tradeable}\n"
                                        f"Item ID: {mount["item_id"]}\n"
                                        f"{source}\n"
                                        f"Owned: {mount["owned"]}\n"
+                                       f"{self.universalis.get_cheapest_price()}\n"
                                        f"[Click her for the BGM]({mount["bgm"]})"
                                        )
                         return description, image_url
@@ -157,15 +162,19 @@ class FFXIVSearch:
                         icon_url = emote["icon"]
 
                         # Get the type and description for the emotes into format to be able to print it
-                        source_type = "\n".join(
-                            [f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in emote["sources"]])
+                        source_type = "\n".join([f"Type: {obtain["type"]}\nText: {obtain["text"]}" for obtain in emote["sources"]])
+                        tradeable = emote["tradeable"]
+
+                        if tradeable:
+                            self.set_item_id(emote["item_id"])
 
                         description = (f"Name: {emote['name']}\n"
                                        f"ID: {emote['id']}\n"
                                        f"Commands: {emote['command']}\n"
-                                       f"Tradeable: {emote['tradeable']}\n"
+                                       f"Tradeable: {tradeable}\n"
                                        f"owned: {emote['owned']}\n"
                                        f"{source_type}\n"
+                                       f"{self.universalis.get_cheapest_price()}\n"
                                        )
 
                         return description, icon_url
